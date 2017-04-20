@@ -41,7 +41,7 @@ public class Main {
 		// pampers_diapers soap
 		
 		//example 3
-		// scissor bath_towel
+		// scissor bath_towel 
 		
 		 
 		List<BabyProducts> listProducts = null;
@@ -74,10 +74,17 @@ public class Main {
             while ((data = bufferedReader.readLine()) != null) {
 
                 String[] productItem = data.split(",");
-                BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0]), Double.valueOf(productItem[1]), productItem[2], false);
-                listProducts.add(product);
-
-
+                if(productItem.length>3){
+                	String comboProduct = productItem[2];
+                	for(int i=3; i<productItem.length; i++){
+                		comboProduct = comboProduct + "," +  productItem[i];
+                	}
+                	BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0]), Double.valueOf(productItem[1]), comboProduct, true);
+                	listProducts.add(product);
+	             }else{
+	                	BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0]), Double.valueOf(productItem[1]), productItem[2], false);
+	                	listProducts.add(product);
+	             }
             }
 
         } catch (FileNotFoundException exp) {
@@ -156,6 +163,7 @@ public class Main {
 			
 			for(String desiredProduct : desiredProductList) {
 				// System.out.println("cost desiredProduct : " + desiredProduct);
+				
 				for(Integer qualifiedShopId : qualifiedShops) {
 					double productPrice = getPriceByIdAndName(listProducts, qualifiedShopId, desiredProduct);
 					// System.out.println("productPrice : " + productPrice);
