@@ -101,41 +101,23 @@ public class Main {
 		for(BabyProducts babyProduct : listProducts) {
 			if(inventory.containsKey(babyProduct.getId())){
 				inventory.get(Integer.valueOf(babyProduct.getId())).add(babyProduct.getName());
-				
-//				if(babyProduct.getName().contains(",")){
-//					System.out.println("TEST 1");
-//					String[] productArray = babyProduct.getName().split(",");
-//					for(String item : productArray){
-//						inventory.get(Integer.valueOf(babyProduct.getId())).add(item.trim());
-//					}
-//				}else{
-//					inventory.get(Integer.valueOf(babyProduct.getId())).add(babyProduct.getName());
-//				}
 			}
 			else{
 				List<String> shopProductList = new ArrayList<String>();
-				if(babyProduct.getName().contains(",")){
-					System.out.println("TEST 2");
-					String[] productArray = babyProduct.getName().split(",");
-					for(String item : productArray){
-						shopProductList.add(item.trim());
-					}
-				}else{
 					shopProductList.add(babyProduct.getName());
-				}
 				
 				inventory.put(Integer.valueOf(babyProduct.getId()),shopProductList);
 			}
 			
 		}
 		
-		for (Map.Entry<Integer, List<String>> entry : inventory.entrySet()) {
-			System.out.println(entry.getKey());
-			for(String shopTest : entry.getValue()){
-				System.out.println(shopTest);
-			}
-		    
-		}
+//		for (Map.Entry<Integer, List<String>> entry : inventory.entrySet()) {
+//			System.out.println(entry.getKey());
+//			for(String shopTest : entry.getValue()){
+//				System.out.println(shopTest);
+//			}
+//		    
+//		}
 		return inventory;
 	}
 	
@@ -145,21 +127,20 @@ public class Main {
 		Map<Integer, Double> minCartMap = new HashMap<Integer, Double>();
 		
 		for(String desiredProduct : desiredProductList) {
-			System.out.println("desiredProduct : " + desiredProduct);
+			//System.out.println("desiredProduct : " + desiredProduct);
 			
 			for (Map.Entry<Integer, List<String>> entry : inventory.entrySet()) {
-				System.out.println("Value Test : " + entry.getValue());
+				//System.out.println("Value Test : " + entry.getValue());
 				
-//				if(entry.getValue().contains(desiredProduct)){
 				if(isProductAvailable(entry.getValue() , desiredProduct)){
 					if(!qualifiedShops.contains(entry.getKey()) && findAll){
-						System.out.println("shop added : " + entry.getKey());
+						//System.out.println("shop added : " + entry.getKey());
 						qualifiedShops.add(entry.getKey());
 					}
 					
 				}else{
 					if(qualifiedShops.contains(entry.getKey())){
-						System.out.println("shop removed : " + entry.getKey());
+						//System.out.println("shop removed : " + entry.getKey());
 						qualifiedShops.remove(entry.getKey());
 						findAll = false;
 					}
@@ -170,72 +151,14 @@ public class Main {
 		if(qualifiedShops.size()==0){
 			System.out.println("No qualified shop to purchase all the desired products. ");
 		}else{
-			System.out.println("qualifiedShops size : " + qualifiedShops.size());
-			for(Integer qualifiedShopId : qualifiedShops) {
-				System.out.println("qualifiedShopId : " + qualifiedShopId);
-			}
-		
-		
-		
-//			for(String desiredProduct : desiredProductList) {
-//				System.out.println("cost desiredProduct : " + desiredProduct);
-//				boolean comboCalc = false;
-//				for(Integer qualifiedShopId : qualifiedShops) {
-//					
-//					double productPrice = getPriceByIdAndName(listProducts, qualifiedShopId, desiredProduct);
-//					System.out.println("productPrice : " + productPrice);
-//					if(productPrice > 0){
-//						if(minCartMap.containsKey(qualifiedShopId)){
-//							Double currentCartPrice = minCartMap.get(qualifiedShopId);
-//							boolean comboFlag = isCombo(listProducts, qualifiedShopId, desiredProduct);
-//							if(!comboCalc && !comboFlag){
-//								System.out.println("TEST" );
-//								currentCartPrice =  currentCartPrice + Double.valueOf(productPrice);
-//								minCartMap.put(qualifiedShopId, currentCartPrice);
-//								comboCalc = false;
-//							}
-////							else{
-////								currentCartPrice =  currentCartPrice + Double.valueOf(0.0);
-////								minCartMap.put(qualifiedShopId, currentCartPrice);
-////							}
-//							
-//						}else{
-//							minCartMap.put(qualifiedShopId, Double.valueOf(productPrice));
-//						}
-//						
-//					}
-//				}
-//				
-//			}
-			
-//			for(String desiredProduct : desiredProductList) {
-//				System.out.println("cost desiredProduct : " + desiredProduct);
-//				for(Integer qualifiedShopId : qualifiedShops) {
-//					
-//					double productPrice = getPriceByIdAndName(listProducts, qualifiedShopId, desiredProduct);
-//					System.out.println("productPrice : " + productPrice);
-//					if(productPrice > 0){
-//						if(minCartMap.containsKey(qualifiedShopId)){
-//							Double currentCartPrice = minCartMap.get(qualifiedShopId);
-////							boolean comboFlag = isCombo(listProducts, qualifiedShopId, desiredProduct);
-//								System.out.println("TEST" );
-//								currentCartPrice =  currentCartPrice + Double.valueOf(productPrice);
-//								minCartMap.put(qualifiedShopId, currentCartPrice);
-//							
-//						}else{
-//							minCartMap.put(qualifiedShopId, Double.valueOf(productPrice));
-//						}
-//						
-//					}
-//				}
-//				
-//			}
+			//System.out.println("qualifiedShops size : " + qualifiedShops.size());
+	 
 			
 			for(String desiredProduct : desiredProductList) {
-				System.out.println("cost desiredProduct : " + desiredProduct);
+				// System.out.println("cost desiredProduct : " + desiredProduct);
 				for(Integer qualifiedShopId : qualifiedShops) {
 					double productPrice = getPriceByIdAndName(listProducts, qualifiedShopId, desiredProduct);
-					System.out.println("productPrice : " + productPrice);
+					// System.out.println("productPrice : " + productPrice);
 					if(productPrice > 0){
 						if(minCartMap.containsKey(qualifiedShopId)){
 							Double currentCartPrice = minCartMap.get(qualifiedShopId);
@@ -253,7 +176,7 @@ public class Main {
 			
 			List<Cart> cartList = new ArrayList<Cart>();
 			for (Map.Entry<Integer, Double> entry : minCartMap.entrySet()) {
-			    System.out.println(entry.getKey() + " : " + entry.getValue());
+			    //System.out.println(entry.getKey() + " : " + entry.getValue());
 			    cartList.add(new Cart(entry.getKey(), entry.getValue()));
 			}
 			
@@ -296,23 +219,6 @@ public class Main {
 		return false;
 		
 	}
-	
-	
-//	for(String testStr : entry.getValue()){
-//	System.out.println("Value testStr : " + testStr);
-//	if(testStr.contains(desiredProduct)){
-//		if(!qualifiedShops.contains(entry.getKey()) && findAll){
-//			System.out.println("shop added : " + entry.getKey());
-//			qualifiedShops.add(entry.getKey());
-//		}
-//		
-//	}else{
-//		if(qualifiedShops.contains(entry.getKey())){
-//			System.out.println("shop removed : " + entry.getKey());
-//			qualifiedShops.remove(entry.getKey());
-//			findAll = false;
-//		}
-//	}
-//}
+ 
 
 }
