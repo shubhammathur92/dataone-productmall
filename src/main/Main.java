@@ -43,6 +43,9 @@ public class Main {
 		//example 3
 		// scissor bath_towel 
 		
+		//example 4
+		// scissor bath_towel cotton_balls
+		
 		 
 		List<BabyProducts> listProducts = null;
 		try {
@@ -75,14 +78,14 @@ public class Main {
 
                 String[] productItem = data.split(",");
                 if(productItem.length>3){
-                	String comboProduct = productItem[2];
+                	String comboProduct = productItem[2].trim();
                 	for(int i=3; i<productItem.length; i++){
                 		comboProduct = comboProduct + "," +  productItem[i];
                 	}
-                	BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0]), Double.valueOf(productItem[1]), comboProduct, true);
+                	BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0].trim()), Double.valueOf(productItem[1].trim()), comboProduct, true);
                 	listProducts.add(product);
 	             }else{
-	                	BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0]), Double.valueOf(productItem[1]), productItem[2], false);
+	                	BabyProducts product = new BabyProducts(Integer.valueOf(productItem[0].trim()), Double.valueOf(productItem[1].trim()), productItem[2].trim(), false);
 	                	listProducts.add(product);
 	             }
             }
@@ -101,7 +104,6 @@ public class Main {
 
 	
 	public static Map<Integer , List<String>> createInventory(List<BabyProducts> listProducts){
-		
 		
 		Map<Integer , List<String>> inventory = new HashMap<Integer , List<String>>();
 		
@@ -142,12 +144,14 @@ public class Main {
 				if(isProductAvailable(entry.getValue() , desiredProduct)){
 					if(!qualifiedShops.contains(entry.getKey()) && findAll){
 						//System.out.println("shop added : " + entry.getKey());
+						//System.out.println("==============================");
 						qualifiedShops.add(entry.getKey());
 					}
 					
 				}else{
 					if(qualifiedShops.contains(entry.getKey())){
 						//System.out.println("shop removed : " + entry.getKey());
+						//System.out.println("==============================");
 						qualifiedShops.remove(entry.getKey());
 						findAll = false;
 					}
@@ -161,12 +165,27 @@ public class Main {
 			//System.out.println("qualifiedShops size : " + qualifiedShops.size());
 	 
 			
-			for(String desiredProduct : desiredProductList) {
-				// System.out.println("cost desiredProduct : " + desiredProduct);
+			for(Integer qualifiedShopId : qualifiedShops) {
+				//System.out.println("cost qualifiedShopId : " + qualifiedShopId);
+				int qualifiedShopComboCounter = 0;
 				
-				for(Integer qualifiedShopId : qualifiedShops) {
+				for(String desiredProduct : desiredProductList) {
+					//System.out.println("cost desiredProduct : " + desiredProduct);
+					
+					boolean isComboProduct  = isComboProduct(listProducts, qualifiedShopId, desiredProduct);
+					
 					double productPrice = getPriceByIdAndName(listProducts, qualifiedShopId, desiredProduct);
-					// System.out.println("productPrice : " + productPrice);
+					//System.out.println("productPrice : " + productPrice);
+					
+					if(isComboProduct){
+						if(qualifiedShopComboCounter >0){
+							productPrice = 0;
+						}else{
+							qualifiedShopComboCounter++;
+						}
+						
+					}
+					
 					if(productPrice > 0){
 						if(minCartMap.containsKey(qualifiedShopId)){
 							Double currentCartPrice = minCartMap.get(qualifiedShopId);
@@ -179,8 +198,9 @@ public class Main {
 						
 					}
 				}
-				
+					 
 			}
+			
 			
 			List<Cart> cartList = new ArrayList<Cart>();
 			for (Map.Entry<Integer, Double> entry : minCartMap.entrySet()) {
@@ -207,7 +227,7 @@ public class Main {
 		
 	}
 	
-	public static boolean isCombo(List<BabyProducts> babyProductList, int shopId, String name){
+	public static boolean isComboProduct(List<BabyProducts> babyProductList, int shopId, String name){
 		
 		for(BabyProducts product : babyProductList){
 			if(product.getId()==shopId && product.getName().contains(name)) {
